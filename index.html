@@ -5,24 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Открываем приложение...</title>
     <script>
-  function openApp() {
-    var appUrl = "udaa://";
-    var appStoreUrl = "https://apps.apple.com/app/id6554004025";
-    
-    // Создаём невидимый iframe для попытки открыть deeplink
-    var iframe = document.createElement("iframe");
-    iframe.style.display = "none";
-    iframe.src = appUrl;
-    document.body.appendChild(iframe);
+        window.onload = function() {
+            var appURL = "udaa://"; // URL-схема вашего приложения
+            var appStoreURL = "https://apps.apple.com/app/id6554004025"; // Ссылка на App Store
 
-    // Если приложение не установлено, после 2 секунд перенаправляем в App Store
-    setTimeout(function () {
-      window.location.href = appStoreUrl;
-    }, 2000);
-  }
+            // Попытка открыть приложение
+            window.location = appURL;
 
-  openApp();
-</script>
+            // Переход в App Store через короткую задержку
+            setTimeout(function() {
+                window.location = appStoreURL;
+            }, 2000); // Задержка 2 секунды
+        };
+    </script>
 
 </head>
 <body>
