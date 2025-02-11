@@ -39,16 +39,23 @@
 </head>
 <body>
     <div class="container">
-        <h2>111 Открытие приложения...</h2>
+        <h2>222 Открытие приложения...</h2>
         <p>Если приложение не открывается, <a href="https://apps.apple.com/app/id6554004025">скачайте его в App Store</a>.</p>
     </div>
 
+    <iframe id="appFrame" style="display: none;"></iframe>
+
     <script>
-        window.location.href = "udaa://";
-        
-        setTimeout(() => {
-            window.location.href = "https://apps.apple.com/app/id6554004025";
-        }, 2000);
+        function openApp() {
+            const iframe = document.getElementById("appFrame");
+            iframe.src = "udaa://";
+
+            setTimeout(() => {
+                window.location.href = "https://apps.apple.com/app/id6554004025";
+            }, 2000);
+        }
+
+        openApp();
     </script>
 </body>
 </html>
