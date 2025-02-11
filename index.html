@@ -3,24 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Открываем приложение...</title>
-    <script>
-        window.onload = function() {
-            var appURL = "udaa://"; // URL-схема вашего приложения
-            var appStoreURL = "https://apps.apple.com/app/id6554004025"; // Ссылка на App Store
-
-            // Попытка открыть приложение
-            window.location = appURL;
-
-            // Переход в App Store через короткую задержку
-            setTimeout(function() {
-                window.location = appStoreURL;
-            }, 2000); // Задержка 2 секунды
-        };
-    </script>
-
+    <title>Открыть приложение</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 25px;
+            font-size: 18px;
+            color: white;
+            background-color: #007aff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background-color: #005ecb;
+        }
+    </style>
 </head>
 <body>
-    <p> 5555 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
+    <div class="container">
+        <h2>111 Открытие приложения...</h2>
+        <p>Если приложение не открывается, <a href="https://apps.apple.com/app/id6554004025">скачайте его в App Store</a>.</p>
+    </div>
+
+    <script>
+        window.location.href = "udaa://";
+        
+        setTimeout(() => {
+            window.location.href = "https://apps.apple.com/app/id6554004025";
+        }, 2000);
+    </script>
 </body>
 </html>
