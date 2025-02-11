@@ -10,38 +10,45 @@
             var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
             var isAndroid = /android/i.test(userAgent);
             var appStoreUrl = "https://apps.apple.com/app/id6554004025"; // iOS App Store
-            // var playStoreUrl = "https://play.google.com/store/apps/details?id=your.package.name"; // Android Google Play
-            var fallbackUrl = "https://udaa.ai"; // Страница с инфой о приложении
+            var playStoreUrl = "https://play.google.com/store/apps/details?id=your.package.name"; // Android Google Play
+            var fallbackUrl = "https://udaa.ai/download"; // Страница с инфой о приложении
             var deepLink = "udaa://"; // Deeplink для приложения
+            var isAppOpened = false;
 
             function openApp() {
-                var iframe = document.createElement("iframe");
-                iframe.style.display = "none";
-                iframe.src = deepLink;
-                document.body.appendChild(iframe);
+                var now = new Date().getTime();
+                setTimeout(function () {
+                    if (!document.hidden && new Date().getTime() - now < 2000) {
+                        isAppOpened = false;
+                    }
+                }, 1000);
+
+                window.location.href = deepLink;
 
                 setTimeout(function () {
-                    document.body.removeChild(iframe); // Удаляем iframe после попытки открытия
-                    window.location.href = deepLink;
-                }, 50); // Ожидание 2 сек перед редиректом
-                
-                setTimeout(function () {
-                    document.body.removeChild(iframe); // Удаляем iframe после попытки открытия
-                    if (isIOS) {
-                        window.location.href = appStoreUrl;
-                    // } else if (isAndroid) {
-                    //     window.location.href = playStoreUrl;
-                    } else {
-                        window.location.href = fallbackUrl;
+                    if (!isAppOpened) {
+                        if (isIOS) {
+                            window.location.href = appStoreUrl;
+                        // } else if (isAndroid) {
+                        //     window.location.href = playStoreUrl;
+                        } else {
+                            window.location.href = fallbackUrl;
+                        }
                     }
-                }, 2000); // Ожидание 2 сек перед редиректом
+                }, 2000);
             }
+
+            document.addEventListener("visibilitychange", function () {
+                if (document.hidden) {
+                    isAppOpened = true;
+                }
+            });
 
             openApp();
         });
     </script>
 </head>
 <body>
-<p>333 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
+    <p>Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
 </body>
 </html>
