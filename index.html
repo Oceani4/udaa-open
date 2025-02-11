@@ -5,91 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Открываем приложение...</title>
     <script>
-        !function() {
-            "use strict";
+  function openApp() {
+    var appUrl = "udaa://";
+    var appStoreUrl = "https://apps.apple.com/app/id6554004025";
+    
+    // Создаём невидимый iframe для попытки открыть deeplink
+    var iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = appUrl;
+    document.body.appendChild(iframe);
 
-            function defineProperties(target, properties) {
-                for (var i = 0; i < properties.length; i++) {
-                    var property = properties[i];
-                    property.enumerable = property.enumerable || false;
-                    property.configurable = true;
-                    if ("value" in property) property.writable = true;
-                    Object.defineProperty(target, property.key, property);
-                }
-            }
+    // Если приложение не установлено, после 2 секунд перенаправляем в App Store
+    setTimeout(function () {
+      window.location.href = appStoreUrl;
+    }, 2000);
+  }
 
-            new (function() {
-                function DeepLinkHandler() {
-                    if (!(this instanceof DeepLinkHandler))
-                        throw new TypeError("Cannot call a class as a function");
+  openApp();
+</script>
 
-                    var startTime = performance.now();
-                    this.init();
-                    var endTime = performance.now();
-                    console.log("DeepLinkHandler initialized in ".concat(endTime - startTime, " ms."));
-                }
-
-                var prototype, staticProps;
-                return prototype = DeepLinkHandler,
-                (staticProps = [{
-                    key: "init",
-                    value: function() {
-                        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-                        var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-                        var isAndroid = /android/i.test(userAgent);
-                        var appStoreUrl = "https://apps.apple.com/app/id6554004025"; // iOS App Store
-                        var playStoreUrl = "https://play.google.com/store/apps/details?id=your.package.name"; // Android Google Play
-                        var fallbackUrl = "https://yourwebsite.com/download"; // Если платформа не определена
-                        var deepLink = "udaa://"; // DeepLink для приложения
-                        var isAppOpened = false;
-
-                        function openApp() {
-                            var now = new Date().getTime();
-
-                            // Создаем скрытую ссылку и кликаем по ней
-                            var link = document.createElement("a");
-                            link.href = deepLink;
-                            link.style.display = "none";
-                            document.body.appendChild(link);
-                            link.click();
-
-                            setTimeout(function() {
-                                if (!document.hidden && new Date().getTime() - now < 2000) {
-                                    isAppOpened = false;
-                                }
-                            }, 1000);
-
-                            setTimeout(function() {
-                                if (!isAppOpened) {
-                                    if (isIOS) {
-                                        window.location.href = appStoreUrl;
-                                    // } else if (isAndroid) {
-                                    //     window.location.href = playStoreUrl;
-                                    } else {
-                                        window.location.href = fallbackUrl;
-                                    }
-                                }
-                            }, 2000);
-                        }
-
-                        document.addEventListener("visibilitychange", function() {
-                            if (document.hidden) {
-                                isAppOpened = true;
-                            }
-                        });
-
-                        openApp();
-                    }
-                }]) && defineProperties(prototype.prototype, staticProps),
-                Object.defineProperty(prototype, "prototype", {
-                    writable: false
-                }),
-                DeepLinkHandler;
-            }());
-        }();
-    </script>
 </head>
 <body>
-    <p> 222222 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
+    <p> 1111 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
 </body>
 </html>
