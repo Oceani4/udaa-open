@@ -20,16 +20,21 @@
                 iframe.src = deepLink;
                 document.body.appendChild(iframe);
 
-                // setTimeout(function () {
-                //     document.body.removeChild(iframe); // Удаляем iframe после попытки открытия
-                //     if (isIOS) {
-                //         window.location.href = appStoreUrl;
-                //     // } else if (isAndroid) {
-                //     //     window.location.href = playStoreUrl;
-                //     } else {
-                //         window.location.href = fallbackUrl;
-                //     }
-                // }, 2000); // Ожидание 2 сек перед редиректом
+                setTimeout(function () {
+                    document.body.removeChild(iframe); // Удаляем iframe после попытки открытия
+                    window.location.href = deepLink;
+                }, 50); // Ожидание 2 сек перед редиректом
+                
+                setTimeout(function () {
+                    document.body.removeChild(iframe); // Удаляем iframe после попытки открытия
+                    if (isIOS) {
+                        window.location.href = appStoreUrl;
+                    // } else if (isAndroid) {
+                    //     window.location.href = playStoreUrl;
+                    } else {
+                        window.location.href = fallbackUrl;
+                    }
+                }, 2000); // Ожидание 2 сек перед редиректом
             }
 
             openApp();
@@ -37,6 +42,6 @@
     </script>
 </head>
 <body>
-<p>222 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
+<p>333 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
 </body>
 </html>
