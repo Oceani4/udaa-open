@@ -11,13 +11,17 @@
             var isAndroid = /android/i.test(userAgent);
             var appStoreUrl = "https://apps.apple.com/app/id6554004025"; // iOS App Store
             // var playStoreUrl = "https://play.google.com/store/apps/details?id=your.package.name"; // Android Google Play
-            var fallbackUrl = "https://udaa.ai"; // Страница с инфой о приложении
+            var fallbackUrl = "https://udaa.ai/download"; // Страница с инфой о приложении
             var deepLink = "udaa://"; // Deeplink для приложения
 
             function openApp() {
-                window.location.href = deepLink;
+                var iframe = document.createElement("iframe");
+                iframe.style.display = "none";
+                iframe.src = deepLink;
+                document.body.appendChild(iframe);
 
                 setTimeout(function () {
+                    document.body.removeChild(iframe); // Удаляем iframe после попытки открытия
                     if (isIOS) {
                         window.location.href = appStoreUrl;
                     // } else if (isAndroid) {
@@ -25,7 +29,7 @@
                     } else {
                         window.location.href = fallbackUrl;
                     }
-                }, 3000); // Ожидание 2 сек перед редиректом
+                }, 4000); // Ожидание 2 сек перед редиректом
             }
 
             openApp();
