@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Открываем приложение...</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            var isAndroid = /android/i.test(userAgent);
+            var appStoreUrl = "https://apps.apple.com/app/id6554004025"; // iOS App Store
+            // var playStoreUrl = "https://play.google.com/store/apps/details?id=your.package.name"; // Android Google Play
+            var fallbackUrl = "https://udaa.ai"; // Страница с инфой о приложении
+            var deepLink = "udaa://"; // Deeplink для приложения
+
+            function openApp() {
+                window.location.href = deepLink;
+
+                setTimeout(function () {
+                    if (isIOS) {
+                        window.location.href = appStoreUrl;
+                    // } else if (isAndroid) {
+                    //     window.location.href = playStoreUrl;
+                    } else {
+                        window.location.href = fallbackUrl;
+                    }
+                }, 2000); // Ожидание 2 сек перед редиректом
+            }
+
+            openApp();
+        });
+    </script>
+</head>
+<body>
+<p>Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
+</body>
+</html>
