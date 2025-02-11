@@ -39,7 +39,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>555 Открытие приложения...</h2>
+        <h2>666 Открытие приложения...</h2>
         <p>Если приложение не открывается, <a href="https://apps.apple.com/app/id6554004025">скачайте его в App Store</a>.</p>
     </div>
 
@@ -49,18 +49,18 @@
     <script>
         function openApp() {
             const iframeApp = document.getElementById("appFrame");
-            // iframeApp.src = "udaa://";
-            iframeApp.src = "https://apps.apple.com/app/id6554004025";
+            iframeApp.src = "udaa://";
+            // iframeApp.src = "https://apps.apple.com/app/id6554004025";
 
-            setTimeout(() => {
-                window.location.href = "udaa://";
-                // const iframeAppStore = document.getElementById("appStoreFrame");
-                // iframeAppStore.src = "https://apps.apple.com/app/id6554004025";
-            }, 3000);
-            
             // setTimeout(() => {
-            //     window.location.href = "https://apps.apple.com/app/id6554004025";
-            // }, 2500);
+            //     window.location.href = "udaa://";
+            //     // const iframeAppStore = document.getElementById("appStoreFrame");
+            //     // iframeAppStore.src = "https://apps.apple.com/app/id6554004025";
+            // }, 3000);
+            
+            setTimeout(() => {
+                window.location.href = "https://apps.apple.com/app/id6554004025";
+            }, 2500);
         }
 
         openApp();
