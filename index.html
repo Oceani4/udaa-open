@@ -11,20 +11,30 @@
             var isAndroid = /android/i.test(userAgent);
             var appStoreUrl = "https://apps.apple.com/app/id6554004025"; // iOS App Store
             var playStoreUrl = "https://play.google.com/store/apps/details?id=your.package.name"; // Android Google Play
-            var fallbackUrl = "https://udaa.ai/download"; // Страница с инфой о приложении
+            var fallbackUrl = "https://yourwebsite.com/download"; // Страница с инфой о приложении
             var deepLink = "udaa://"; // Deeplink для приложения
             var isAppOpened = false;
 
             function openApp() {
                 var now = new Date().getTime();
+                
+                // Создаем скрытую кнопку
+                var button = document.createElement("a");
+                button.href = deepLink;
+                button.style.display = "none";
+                document.body.appendChild(button);
+                
+                // Автоматически кликаем по deeplink
+                button.click();
+
+                // Проверяем, ушел ли пользователь из браузера (значит, приложение открылось)
                 setTimeout(function () {
-                    if (!document.hidden && new Date().getTime() - now < 4000) {
+                    if (!document.hidden && new Date().getTime() - now < 2000) {
                         isAppOpened = false;
                     }
                 }, 1000);
 
-                window.location.href = deepLink;
-
+                // Если приложение не открылось, ведем в магазин
                 setTimeout(function () {
                     if (!isAppOpened) {
                         if (isIOS) {
@@ -35,9 +45,10 @@
                             window.location.href = fallbackUrl;
                         }
                     }
-                }, 4000);
+                }, 2000);
             }
 
+            // Отслеживаем уход пользователя в приложение
             document.addEventListener("visibilitychange", function () {
                 if (document.hidden) {
                     isAppOpened = true;
@@ -49,6 +60,6 @@
     </script>
 </head>
 <body>
-    <p>000 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
+    <p>1111 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
 </body>
 </html>
