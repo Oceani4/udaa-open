@@ -18,7 +18,7 @@
             function openApp() {
                 var now = new Date().getTime();
                 setTimeout(function () {
-                    if (!document.hidden && new Date().getTime() - now < 2000) {
+                    if (!document.hidden && new Date().getTime() - now < 4000) {
                         isAppOpened = false;
                     }
                 }, 1000);
@@ -35,7 +35,7 @@
                             window.location.href = fallbackUrl;
                         }
                     }
-                }, 2000);
+                }, 4000);
             }
 
             document.addEventListener("visibilitychange", function () {
@@ -49,6 +49,6 @@
     </script>
 </head>
 <body>
-    <p>111 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
+    <p>000 Если приложение не открылось автоматически, нажмите <a href="udaa://">здесь</a>.</p>
 </body>
 </html>
