@@ -39,7 +39,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>777.1 Открытие приложения...</h2>
+        <h2>777.2 Открытие приложения...</h2>
         <p>Если приложение не открывается, <a href="https://apps.apple.com/app/id6554004025">скачайте его в App Store</a>.</p>
     </div>
 
@@ -50,7 +50,8 @@
         function openApp() {
             const iframeApp = document.getElementById("appFrame");
             // iframeApp.src = "udaa://";
-            window.location.href = "udaa://";
+            // window.location.href = "udaa://";
+            window.location.href = "https://apps.apple.com/app/id6554004025";
             // iframeApp.src = "https://apps.apple.com/app/id6554004025";
 
             // setTimeout(() => {
@@ -60,7 +61,8 @@
             // }, 3000);
             
             setTimeout(() => {
-                window.location.href = "https://apps.apple.com/app/id6554004025";
+                window.location.href = "udaa://";
+                // window.location.href = "https://apps.apple.com/app/id6554004025";
             }, 2500);
         }
 
