@@ -1,72 +1,44 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open App</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .button {
-            display: inline-block;
-            padding: 15px 25px;
-            font-size: 18px;
-            color: white;
-            background-color: #007aff;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background 0.3s;
-        }
-        .button:hover {
-            background-color: #005ecb;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Мета-теги для превью в мессенджерах -->
+  <meta property="og:title" content="Spot.It - Shared Content">
+  <meta property="og:description" content="Point. Snap. Done. Explore with Spot.It!">
+  <meta property="og:image" content="https://spotit.live/images/preview-image.jpg">
+  <meta property="og:url" content="https://spotit.live/share/<%- shareId %>">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Spot.It - Shared Content">
+  <meta name="twitter:description" content="Point. Snap. Done. Explore with Spot.It!">
+  <meta name="twitter:image" content="https://spotit.live/images/preview-image.jpg">
+  <!-- Мета-тег для попытки редиректа -->
+  <meta http-equiv="refresh" content="0; url=spotit://share/<%- shareId %>">
+  <title>Spot.It - Share</title>
+  <title>Spot.It - Point. Snap. Done.</title>
+  <script>
+    // Извлечение shareId из URL
+    const path = window.location.pathname;
+    const shareId = path.split('/share/')[1];
+    console.log('1. shareId: ', shareId)
+
+    // Попытка редиректа на кастомную схему
+    if (shareId) {
+      const link = `spotit://share/${shareId}`
+      console.log('2. link: ', link)
+      window.location.href = link;
+    }
+
+    // Резервный редирект через таймер, если приложение не открылось
+    setTimeout(() => {
+      // Можно перенаправить на App Store, если приложение не установлено
+      window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
+    }, 1000);
+  </script>
 </head>
 <body>
-    <div class="container">
-        <h2>Opening the app...</h2>
-        <p>If the app does not open, <a href="https://apps.apple.com/app/id6554004025">download it from the App Store</a>.</p>
-    </div>
-
-    <iframe id="appFrame" style="display: none;"></iframe>
-    <iframe id="appStoreFrame" style="display: none;"></iframe>
-
-    <script>
-        function openApp() {
-            const iframeApp = document.getElementById("appFrame");
-            // iframeApp.src = "udaa://";
-            // window.location.href = "udaa://";
-            window.location.href = "https://apps.apple.com/app/id6554004025";
-            // iframeApp.src = "https://apps.apple.com/app/id6554004025";
-
-            // setTimeout(() => {
-            //     window.location.href = "udaa://";
-            //     // const iframeAppStore = document.getElementById("appStoreFrame");
-            //     // iframeAppStore.src = "https://apps.apple.com/app/id6554004025";
-            // }, 3000);
-            
-            setTimeout(() => {
-                window.location.href = "udaa://";
-                // window.location.href = "https://apps.apple.com/app/id6554004025";
-            }, 2500);
-        }
-
-        openApp();
-    </script>
+  <h1>Spot.It - Point. Snap. Done.</h1>
+  <p>Opening Spot.It app...</p>
 </body>
 </html>
