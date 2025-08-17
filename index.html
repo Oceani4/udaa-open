@@ -20,7 +20,9 @@
   <script>
     // Извлечение shareId из URL
     const path = window.location.pathname;
-    const shareId = path.split('/share/')[1];
+    console.log('0. window.location.pathname: ', window.location.pathname)
+    // const shareId = path.split('/share/')[1];
+    const shareId = path.split('?share=')[1];
     console.log('1. shareId: ', shareId)
 
     // Попытка редиректа на кастомную схему
