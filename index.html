@@ -40,14 +40,14 @@
         // Резервный редирект в Google Play
         setTimeout(() => {
           window.location.href = 'https://play.google.com/store/apps/details?id=com.spotit.live';
-        }, 1000);
+        }, 5000);
       } else {
         // Для iOS и других платформ используем кастомную схему
         window.location.href = appUrl;
         // Резервный редирект в App Store
         setTimeout(() => {
           window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
-        }, 1000);
+        }, 5000);
       }
     } else {
       document.body.innerHTML += '<p>Error: No share ID found in the URL.</p>';
