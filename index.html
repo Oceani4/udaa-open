@@ -35,7 +35,8 @@
       console.log('2. appUrl: ', appUrl)
       if (isAndroid) {
         // Для Android пробуем открыть через Intent
-        window.location.href = `intent://${shareId}#Intent;scheme=spotit;package=com.spotit.live;end`;
+        // window.location.href = `intent://${shareId}#Intent;scheme=spotit;package=com.spotit.live;end`;
+        window.location.href = `intent://${shareId}#Intent;scheme=spotit.live;package=com.spotit.live;end`;
         // Резервный редирект в Google Play
         setTimeout(() => {
           window.location.href = 'https://play.google.com/store/apps/details?id=com.spotit.live';
