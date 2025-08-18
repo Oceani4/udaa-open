@@ -28,41 +28,47 @@
     console.log('1. shareId: ', shareId)
 
     const isAndroid = /Android/i.test(navigator.userAgent);
-    // const appUrl1 = `spotit://share/stage-9yeenHT`;
-    // window.location.href = appUrl1;
 
     // Попытка редиректа на кастомную схему
     if (shareId) {
       const appUrl = `spotit://share/${shareId}`;
-      console.log('2. appUrl: ', appUrl)
-      if (isAndroid) {
-        // Для Android пробуем открыть через Intent
-        // window.location.href = `intent://${shareId}#Intent;scheme=spotit;package=com.spotit.live;end`;
-        // window.location.href = `intent://${shareId}#Intent;scheme=spotit.live;package=com.spotit.live;end`;
-        window.location.href = appUrl;
-        // Резервный редирект в Google Play
-        setTimeout(() => {
-          window.location.href = 'https://play.google.com/store/apps/details?id=com.spotit.live';
-        }, 5000);
-      } else {
-        // Для iOS и других платформ используем кастомную схему
-        window.location.href = appUrl;
-        // Резервный редирект в App Store
-        setTimeout(() => {
-          window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
-        }, 5000);
-      }
+      // console.log('2. appUrl: ', appUrl)
+      window.location.href = appUrl;
+
+      setTimeout(() => {
+        window.location.href = isAndroid
+                ? 'https://play.google.com/store/apps/details?id=com.spotit.live'
+                : 'https://apps.apple.com/gb/app/spotit-live/id6740921502'
+      }, 2000);
+
+      // if (isAndroid) {
+      //   // Для Android пробуем открыть через Intent
+      //   // window.location.href = `intent://${shareId}#Intent;scheme=spotit;package=com.spotit.live;end`;
+      //   // window.location.href = `intent://${shareId}#Intent;scheme=spotit.live;package=com.spotit.live;end`;
+      //   window.location.href = appUrl;
+      //   // Резервный редирект в Google Play
+      //   setTimeout(() => {
+      //     window.location.href = 'https://play.google.com/store/apps/details?id=com.spotit.live';
+      //   }, 5000);
+      // } else {
+      //   // Для iOS и других платформ используем кастомную схему
+      //   window.location.href = appUrl;
+      //   // Резервный редирект в App Store
+      //   setTimeout(() => {
+      //     window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
+      //   }, 5000);
+      // }
     } else {
       document.body.innerHTML += '<p>Error: No share ID found in the URL.</p>';
     }
 
-
-
     // Резервный редирект через таймер, если приложение не открылось
     setTimeout(() => {
-      // Можно перенаправить на App Store, если приложение не установлено
-      window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
-    }, 10000);
+      // window.location.href = isAndroid
+      //         ? 'https://play.google.com/store/apps/details?id=com.spotit.live'
+      //         : 'https://apps.apple.com/gb/app/spotit-live/id6740921502'
+      window.location.href = 'https://spotit.live'
+    }, 2500);
   </script>
 </head>
 <body>
