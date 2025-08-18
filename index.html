@@ -1,69 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Мета-теги для превью в мессенджерах -->
-  <meta property="og:title" content="Spot.It - Shared Content">
-  <meta property="og:description" content="Point. Snap. Done. Explore with Spot.It!">
-  <meta property="og:image" content="https://spotit.live/images/preview-image.jpg">
-  <meta property="og:url" content="https://spotit.live/share/<%- shareId %>">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Spot.It - Shared Content">
-  <meta name="twitter:description" content="Point. Snap. Done. Explore with Spot.It!">
-  <meta name="twitter:image" content="https://spotit.live/images/preview-image.jpg">
-  <!-- Мета-тег для попытки редиректа -->
-  <meta http-equiv="refresh" content="0; url=spotit://share/<%- shareId %>">
-  <title>Spot.It - Share</title>
-  <title>Spot.It - Point. Snap. Done.</title>
-  <script>
-    // Извлечение shareId из URL
-    const path = window.location.pathname;
-    const search = window.location.search;
-    console.log('0.1 window.location.pathname: ', window.location.pathname)
-    console.log('0.2 window.location.search: ', window.location.search)
-    // const shareId = path.split('/share/')[1];
-    const shareId = search.split('?share=')[1];
-    console.log('1. shareId: ', shareId)
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spot.It - Test Links</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .platform {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        a {
+            display: block;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        // Определение платформы
+        function detectPlatform() {
+            const userAgent = navigator.userAgent;
+            if (/android/i.test(userAgent)) {
+                return "Android";
+            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return "iOS";
+            } else {
+                return "Not detected";
+            }
+        }
 
-    const isAndroid = /Android/i.test(navigator.userAgent);
+        // Получение shareId из URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param) || "stage-9yeenHT"; // Значение по умолчанию для теста
+        }
 
-    // Попытка редиректа на кастомную схему
-    if (shareId) {
-      const appUrl = `spotit://share/${shareId}`;
-      console.log('2. appUrl: ', appUrl)
-      if (isAndroid) {
-        // Для Android пробуем открыть через Intent
-        // window.location.href = `intent://${shareId}#Intent;scheme=spotit;package=com.spotit.live;end`;
-        window.location.href = `intent://${shareId}#Intent;scheme=spotit.live;package=com.spotit.live;end`;
-        // Резервный редирект в Google Play
-        setTimeout(() => {
-          window.location.href = 'https://play.google.com/store/apps/details?id=com.spotit.live';
-        }, 5000);
-      } else {
-        // Для iOS и других платформ используем кастомную схему
-        window.location.href = appUrl;
-        // Резервный редирект в App Store
-        setTimeout(() => {
-          window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
-        }, 5000);
-      }
-    } else {
-      document.body.innerHTML += '<p>Error: No share ID found in the URL.</p>';
-    }
-
-
-
-    // Резервный редирект через таймер, если приложение не открылось
-    setTimeout(() => {
-      // Можно перенаправить на App Store, если приложение не установлено
-      window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
-    }, 1000);
-  </script>
+        // Отображение платформы и ссылок
+        window.onload = function() {
+            const platform = detectPlatform();
+            const shareId = getQueryParam('share');
+            document.getElementById('platform').textContent = `Platform: ${platform}`;
+            document.getElementById('spotit-link').href = `spotit://share/${shareId}`;
+            document.getElementById('spotit-live-link').href = `spotit.live://share/${shareId}`;
+            document.getElementById('intent-link').href = `intent://${shareId}#Intent;scheme=spotit.live;package=com.spotit.live;end`;
+        };
+    </script>
 </head>
 <body>
-  <h1>Spot.It - Point. Snap. Done.</h1>
-  <p>Opening Spot.It app...</p>
+    <h1>Spot.It - Test Links</h1>
+    <p id="platform">Platform: Detecting...</p>
+    <div class="links">
+        <a id="spotit-link" href="#">spotit://share/stage-9yeenHT</a>
+        <a id="spotit-live-link" href="#">spotit.live://share/stage-9yeenHT</a>
+        <a id="intent-link" href="#">intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end</a>
+        <a href="https://play.google.com/store/apps/details?id=com.spotit.live">Google Play Store</a>
+        <a href="https://apps.apple.com/gb/app/spotit-live/id6740921502">App Store</a>
+    </div>
 </body>
 </html>
