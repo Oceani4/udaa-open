@@ -28,6 +28,8 @@
     console.log('1. shareId: ', shareId)
 
     const isAndroid = /Android/i.test(navigator.userAgent);
+    // const appUrl1 = `spotit://share/stage-9yeenHT`;
+    // window.location.href = appUrl1;
 
     // Попытка редиректа на кастомную схему
     if (shareId) {
@@ -60,7 +62,7 @@
     setTimeout(() => {
       // Можно перенаправить на App Store, если приложение не установлено
       window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
-    }, 1000);
+    }, 10000);
   </script>
 </head>
 <body>
