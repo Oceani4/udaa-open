@@ -27,12 +27,32 @@
     const shareId = search.split('?share=')[1];
     console.log('1. shareId: ', shareId)
 
+    const isAndroid = /Android/i.test(navigator.userAgent);
+
     // Попытка редиректа на кастомную схему
     if (shareId) {
-      const link = `spotit://share/${shareId}`
-      console.log('2. link: ', link)
-      window.location.href = link;
+      const appUrl = `spotit://share/${shareId}`;
+      console.log('2. appUrl: ', appUrl)
+      if (isAndroid) {
+        // Для Android пробуем открыть через Intent
+        window.location.href = `intent://${shareId}#Intent;scheme=spotit;package=com.example.spotit;end`;
+        // Резервный редирект в Google Play
+        setTimeout(() => {
+          window.location.href = 'https://play.google.com/store/apps/details?id=com.spotit.live';
+        }, 1000);
+      } else {
+        // Для iOS и других платформ используем кастомную схему
+        window.location.href = appUrl;
+        // Резервный редирект в App Store
+        setTimeout(() => {
+          window.location.href = 'https://apps.apple.com/gb/app/spotit-live/id6740921502';
+        }, 1000);
+      }
+    } else {
+      document.body.innerHTML += '<p>Error: No share ID found in the URL.</p>';
     }
+
+
 
     // Резервный редирект через таймер, если приложение не открылось
     setTimeout(() => {
