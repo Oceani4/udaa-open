@@ -99,7 +99,7 @@
         timezone: timezone,
         languages: languages
       };
-      
+
       console.log('data: ', data)
 
       // // Отправка на API (замените URL на ваш реальный API-эндпоинт)
@@ -131,8 +131,19 @@
 
       // Отправляем данные на API (заготовка)
       sendDeviceDataToApi(shareId);
-      
+
       document.getElementById('platform').textContent = `Platform: ${platform}`;
+      document.getElementById('shareId').textContent = `shareId: ${shareId}`;
+      document.getElementById('source').textContent = `source: ${source}`;
+      document.getElementById('userAgent').textContent = `userAgent: ${userAgent}`;
+      document.getElementById('screenWidth').textContent = `screenWidth: ${screenWidth}`;
+      document.getElementById('screenHeight').textContent = `screenHeight: ${screenHeight}`;
+      document.getElementById('timezone').textContent = `timezone: ${timezone}`;
+      document.getElementById('languages').textContent = `languages: ${languages}`;
+      document.getElementById('deviceFingerprint').textContent = `deviceFingerprint: ${deviceFingerprint}`;
+      document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw: ${deviceFingerprintRaw}`;
+      document.getElementById('data').textContent = `data: ${JSON.stringify(data)}`;
+      
       document.getElementById('spotit-link').href = `spotit://share/${shareId}`;
       document.getElementById('spotit-live-link').href = `spotit.live://share/${shareId}`;
       document.getElementById('intent-link').href = `intent://${shareId}#Intent;scheme=spotit.live;package=com.spotit.live;end`;
@@ -142,6 +153,16 @@
 <body>
 <h1>Spot.It - Test Links</h1>
 <p id="platform">Platform: Detecting...</p>
+<p id="shareId">shareId: Detecting...</p>
+<p id="source">source: Detecting...</p>
+<p id="userAgent">userAgent: Detecting...</p>
+<p id="screenWidth">screenWidth: Detecting...</p>
+<p id="screenHeight">screenHeight: Detecting...</p>
+<p id="timezone">timezone: Detecting...</p>
+<p id="languages">languages: Detecting...</p>
+<p id="deviceFingerprint">deviceFingerprint: Detecting...</p>
+<p id="deviceFingerprintRaw">deviceFingerprintRaw: Detecting...</p>
+<p id="data">data: Detecting...</p>
 <div class="links">
   <a id="spotit-link" href="#">spotit://share/stage-9yeenHT</a>
   <a id="spotit-live-link" href="#">spotit.live://share/stage-9yeenHT</a>
