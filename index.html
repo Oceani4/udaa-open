@@ -166,8 +166,12 @@
       sendDeviceDataToApi(shareId);
 
       // Динамический импорт FingerprintJS
-      import('https://openfpcdn.io/fingerprintjs/v4')
-              .then(FingerprintJS => FingerprintJS.load())
+      // import('https://openfpcdn.io/fingerprintjs/v4')
+      //         .then(FingerprintJS => FingerprintJS.load())
+      import('https://fpjscdn.net/v3/tieQhqJX6feQrgOXYhV3')
+              .then(FingerprintJS => FingerprintJS.load({
+                region: "eu"
+              }))
               .then(fp => fp.get())
               .then(result => {
                 const fingerprintJSId = result.visitorId;
