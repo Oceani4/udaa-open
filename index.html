@@ -3,40 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Мета-теги для превью в мессенджерах -->
-  <meta property="og:title" content="Spot.It - Shared Content">
-  <meta property="og:description" content="Point. Snap. Done. Explore with Spot.It!">
-  <meta property="og:image" content="https://spotit.live/images/preview-image.jpg">
-  <meta property="og:url" content="https://spotit.live/share/<%- shareId %>">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Spot.It - Shared Content">
-  <meta name="twitter:description" content="Point. Snap. Done. Explore with Spot.It!">
-  <meta name="twitter:image" content="https://spotit.live/images/preview-image.jpg">
-  <!-- Мета-тег для попытки редиректа -->
-  <meta http-equiv="refresh" content="0; url=spotit://share/<%- shareId %>">
-  <title>Spot.It - Point. Snap. Done.</title>
+  <title>Spot.It - Test Links</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
       text-align: center;
-      margin-top: 50px;
     }
-    .loader {
-      border: 8px solid #f3f3f3; /* Light grey */
-      border-top: 8px solid #3498db; /* Blue */
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      animation: spin 2s linear infinite;
-      margin: 20px auto;
+    h1 {
+      color: #333;
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .platform {
+      font-weight: bold;
+      margin-bottom: 20px;
     }
-    .hidden {
-      display: none;
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    a {
+      display: block;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    a:hover {
+      background-color: #0056b3;
     }
   </style>
   <script>
@@ -89,6 +86,9 @@
 
       // Создаем уникальный "отпечаток" устройства (простая хэш-функция для примера)
       const deviceFingerprint = btoa(userAgent + screenWidth + screenHeight + timezone + languages); // Base64 для упрощения
+      console.log('----')
+      console.log('deviceFingerprint: ', deviceFingerprint)
+      console.log('deviceFingerprintRaw: ', userAgent + screenWidth + screenHeight + timezone + languages)
 
       const data = {
         deviceFingerprint: deviceFingerprint,
@@ -99,74 +99,55 @@
         timezone: timezone,
         languages: languages
       };
+      
+      console.log('data: ', data)
 
-      // Отправка на API (замените URL на ваш реальный API-эндпоинт)
-      fetch('https://your-api-server.com/save-share-id', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-              .then(response => response.json())
-              .then(result => {
-                console.log('API response:', result);
-              })
-              .catch(error => {
-                console.error('API error:', error);
-              });
+      // // Отправка на API (замените URL на ваш реальный API-эндпоинт)
+      // fetch('https://your-api-server.com/save-share-id', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify(data)
+      // })
+      //         .then(response => response.json())
+      //         .then(result => {
+      //           console.log('API response:', result);
+      //         })
+      //         .catch(error => {
+      //           console.error('API error:', error);
+      //         });
     }
 
+    // Отображение платформы и ссылок
     window.onload = function() {
-      // Показываем лоадер
-      document.getElementById('loader').classList.remove('hidden');
-      // const path = window.location.pathname;
-      // const search = window.location.search;
-      // // console.log('0.1 window.location.pathname: ', window.location.pathname)
-      // // console.log('0.2 window.location.search: ', window.location.search)
-      // // const shareId = path.split('/share/')[1];
-      // const shareId = search.split('?share=')[1];
-      // Получаем shareId из URL
-      const shareId = getQueryParam('share') || ''; // Значение по умолчанию, если не указано
-      console.log('1. shareId: ', shareId)
-
-      const isAndroid = /Android/i.test(navigator.userAgent)
-
+      const platform = detectPlatform();
+      console.log(`1. platform: ${platform}`);
+      const shareId = getQueryParam('share');
+      console.log(`2. shareId: ${shareId}`);
       // Вывод в консоль источника клика
       const source = detectSource();
-      console.log(`2. User clicked from: ${source}`);
+      console.log(`3. User clicked from: ${source}`);
 
-
-
-      // Попытка редиректа на кастомную схему
-      if (shareId) {
-        // Отправляем данные на API (заготовка)
-        sendDeviceDataToApi(shareId);
-
-        const appUrl = `spotit://share/${shareId}`;
-        window.location.href = appUrl;
-
-      }
-
-      setTimeout(() => {
-        document.getElementById('loader').classList.add('hidden');
-        window.location.href = isAndroid
-                ? 'https://play.google.com/store/apps/details?id=com.spotit.live'
-                : 'https://apps.apple.com/gb/app/spotit-live/id6740921502'
-      }, 5000);
-
-
-
-      // Попытка открытия приложения (пример редиректа, закомментировано как в предыдущих версиях)
-      const platform = detectPlatform();
-
-
+      // Отправляем данные на API (заготовка)
+      sendDeviceDataToApi(shareId);
+      
+      document.getElementById('platform').textContent = `Platform: ${platform}`;
+      document.getElementById('spotit-link').href = `spotit://share/${shareId}`;
+      document.getElementById('spotit-live-link').href = `spotit.live://share/${shareId}`;
+      document.getElementById('intent-link').href = `intent://${shareId}#Intent;scheme=spotit.live;package=com.spotit.live;end`;
     };
   </script>
 </head>
 <body>
-<h1>Spot.It - Point. Snap. Done.</h1>
-<p>Opening Spot.It app...</p>
-<div id="loader" class="loader hidden"></div> <!-- Лоадер скрыт по умолчанию -->
+<h1>Spot.It - Test Links</h1>
+<p id="platform">Platform: Detecting...</p>
+<div class="links">
+  <a id="spotit-link" href="#">spotit://share/stage-9yeenHT</a>
+  <a id="spotit-live-link" href="#">spotit.live://share/stage-9yeenHT</a>
+  <a id="intent-link" href="#">intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end</a>
+  <a href="https://play.google.com/store/apps/details?id=com.spotit.live">Google Play Store</a>
+  <a href="https://apps.apple.com/gb/app/spotit-live/id6740921502">App Store</a>
+</div>
 </body>
 </html>
