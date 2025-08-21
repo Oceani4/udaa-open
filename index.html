@@ -30,11 +30,13 @@
       margin: 5px 0;
     }
   </style>
+  <!-- Подключение FingerprintJS через CDN -->
+  <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
   <script>
     // Функция для получения параметра из URL
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param) || "stage-9yeenHT"; // Значение по умолчанию для теста
+      return urlParams.get(param) || "stage-9yeenHT";
     }
 
     // Определение платформы
@@ -68,17 +70,47 @@
       }
     }
 
-    // Заготовка для отправки уникальных данных устройства и shareId на сервер
-    function sendDeviceDataToApi(shareId) {
+    // Генерация случайного UUID
+    function generateUUID() {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    }
+
+    // Получение информации о батарее (если доступно)
+    function getBatteryInfo() {
+      return new Promise((resolve) => {
+        if (navigator.getBattery) {
+          navigator.getBattery().then(battery => {
+            resolve({
+              level: battery.level,
+              charging: battery.charging
+            });
+          });
+        } else {
+          resolve({ level: null, charging: null });
+        }
+      });
+    }
+
+    // Кастомный deviceFingerprint
+    async function sendDeviceDataToApi(shareId) {
       const platform = detectPlatform();
       const userAgent = navigator.userAgent;
       const screenWidth = window.screen.width;
       const screenHeight = window.screen.height;
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const languages = navigator.languages.join(',');
+      const timestamp = Date.now();
+      const sessionUUID = generateUUID();
 
-      const deviceFingerprintRaw = userAgent + screenWidth + screenHeight + timezone + languages;
-      const deviceFingerprint = btoa(deviceFingerprintRaw); // Base64 для упрощения
+      const batteryInfo = await getBatteryInfo();
+      const batteryLevel = batteryInfo.level ? batteryInfo.level.toFixed(2) : 'N/A';
+      const isCharging = batteryInfo.charging ? 'Yes' : 'No';
+
+      const deviceFingerprintRaw = userAgent + screenWidth + screenHeight + timezone + languages + timestamp + sessionUUID + batteryLevel + isCharging;
+      const deviceFingerprint = btoa(deviceFingerprintRaw);
 
       const data = {
         deviceFingerprint: deviceFingerprint,
@@ -87,26 +119,14 @@
         userAgent: userAgent,
         screenResolution: `${screenWidth}x${screenHeight}`,
         timezone: timezone,
-        languages: languages
+        languages: languages,
+        timestamp: timestamp,
+        sessionUUID: sessionUUID,
+        batteryLevel: batteryLevel,
+        isCharging: isCharging
       };
 
-      // // Отправка на API (замените URL на ваш реальный API-эндпоинт)
-      // fetch('https://your-api-server.com/save-share-id', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify(data)
-      // })
-      //         .then(response => response.json())
-      //         .then(result => {
-      //           console.log('API response:', result);
-      //         })
-      //         .catch(error => {
-      //           console.error('API error:', error);
-      //         });
-
-      // Обновление HTML с данными
+      // Обновление HTML с кастомными данными
       document.getElementById('platform').textContent = `Platform: ${platform}`;
       document.getElementById('shareId').textContent = `shareId: ${shareId}`;
       document.getElementById('source').textContent = `source: ${detectSource()}`;
@@ -115,11 +135,22 @@
       document.getElementById('screenHeight').textContent = `screenHeight: ${screenHeight}`;
       document.getElementById('timezone').textContent = `timezone: ${timezone}`;
       document.getElementById('languages').textContent = `languages: ${languages}`;
-      document.getElementById('deviceFingerprint').textContent = `deviceFingerprint: ${deviceFingerprint}`;
-      document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw: ${deviceFingerprintRaw}`;
-      document.getElementById('data').textContent = `data: ${JSON.stringify(data)}`;
+      document.getElementById('deviceFingerprint').textContent = `deviceFingerprint (Custom): ${deviceFingerprint}`;
+      document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw (Custom): ${deviceFingerprintRaw.substring(0, 50)}...`;
+      document.getElementById('data').textContent = `data (Custom): ${JSON.stringify(data, null, 2)}`;
+
+      // // Отправка на API (замените URL)
+      // fetch('https://your-api-server.com/save-share-id', {
+      //   method: 'POST',
+      //   headers: {'Content-Type': 'application/json'},
+      //   body: JSON.stringify(data)
+      // })
+      //         .then(response => response.json())
+      //         .then(result => console.log('API response (Custom):', result))
+      //         .catch(error => console.error('API error (Custom):', error));
     }
 
+    // FingerprintJS deviceFingerprint
     window.onload = function() {
       // Показываем лоадер
       document.getElementById('loader').classList.remove('hidden');
@@ -131,8 +162,45 @@
       const source = detectSource();
       console.log(`User clicked from: ${source}`);
 
-      // Отправляем данные на API и обновляем HTML
+      // Кастомный fingerprint
       sendDeviceDataToApi(shareId);
+
+      // Динамический импорт FingerprintJS
+      import('https://openfpcdn.io/fingerprintjs/v4')
+              .then(FingerprintJS => FingerprintJS.load())
+              .then(fp => fp.get())
+              .then(result => {
+                const fingerprintJSId = result.visitorId;
+                console.log('FingerprintJS result:', result);
+                console.log('FingerprintJS visitorId:', fingerprintJSId);
+
+                // Обновление HTML с FingerprintJS данными
+                document.getElementById('fingerprintJSId').textContent = `deviceFingerprint (FingerprintJS): ${fingerprintJSId}`;
+
+                // Отправка FingerprintJS на API
+                const fpData = {
+                  deviceFingerprint: fingerprintJSId,
+                  shareId: shareId,
+                  platform: detectPlatform()
+                };
+                // fetch('https://your-api-server.com/save-share-id', {
+                //   method: 'POST',
+                //   headers: {'Content-Type': 'application/json'},
+                //   body: JSON.stringify(fpData)
+                // })
+                //         .then(response => response.json())
+                //         .then(result => console.log('API response (FingerprintJS):', result))
+                //         .catch(error => console.error('API error (FingerprintJS):', error));
+              })
+              .catch(error => console.error('FingerprintJS load error:', error));
+
+      // Динамическое обновление ссылок
+      const links = document.getElementsByTagName('a');
+      for (let link of links) {
+        if (link.href.includes('stage-9yeenHT')) {
+          link.href = link.href.replace('stage-9yeenHT', shareId);
+        }
+      }
 
       // Скрываем лоадер после 3 секунд
       setTimeout(() => {
@@ -152,12 +220,13 @@
 <div class="data-item" id="screenHeight">screenHeight: Detecting...</div>
 <div class="data-item" id="timezone">timezone: Detecting...</div>
 <div class="data-item" id="languages">languages: Detecting...</div>
-<div class="data-item" id="deviceFingerprint">deviceFingerprint: Detecting...</div>
-<div class="data-item" id="deviceFingerprintRaw">deviceFingerprintRaw: Detecting...</div>
-<div class="data-item" id="data">data: Detecting...</div>
-<a href="spotit://share/<shareId>">spotit://share/stage-9yeenHT</a>
-<a href="spotit.live://share/<shareId>">spotit.live://share/stage-9yeenHT</a>
-<a href="intent://<shareId>#Intent;scheme=spotit.live;package=com.spotit.live;end">intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end</a>
+<div class="data-item" id="deviceFingerprint">deviceFingerprint (Custom): Detecting...</div>
+<div class="data-item" id="deviceFingerprintRaw">deviceFingerprintRaw (Custom): Detecting...</div>
+<div class="data-item" id="data">data (Custom): Detecting...</div>
+<div class="data-item" id="fingerprintJSId">deviceFingerprint (FingerprintJS): Detecting...</div>
+<a href="spotit://share/stage-9yeenHT">spotit://share/stage-9yeenHT</a>
+<a href="spotit.live://share/stage-9yeenHT">spotit.live://share/stage-9yeenHT</a>
+<a href="intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end">intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end</a>
 <a href="https://play.google.com/store/apps/details?id=com.spotit.live">Google Play Store</a>
 <a href="https://apps.apple.com/gb/app/spotit-live/id6740921502">App Store</a>
 </body>
