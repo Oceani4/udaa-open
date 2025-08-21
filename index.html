@@ -7,44 +7,37 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
       text-align: center;
+      margin-top: 20px;
     }
-    h1 {
-      color: #333;
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 2s linear infinite;
+      margin: 20px auto;
     }
-    .platform {
-      font-weight: bold;
-      margin-bottom: 20px;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-    .links {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .hidden {
+      display: none;
     }
-    a {
-      display: block;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-    a:hover {
-      background-color: #0056b3;
+    .data-item {
+      margin: 5px 0;
     }
   </style>
   <script>
     // Функция для получения параметра из URL
     function getQueryParam(param) {
-      // const urlParams = new URLSearchParams(window.location.search);
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
+      return urlParams.get(param) || "stage-9yeenHT"; // Значение по умолчанию для теста
     }
 
-    // Определение платформы (Android, iOS или не определено)
+    // Определение платформы
     function detectPlatform() {
       const userAgent = navigator.userAgent;
       if (/android/i.test(userAgent)) {
@@ -56,7 +49,7 @@
       }
     }
 
-    // Определение источника (браузер/приложение)
+    // Определение источника
     function detectSource() {
       const userAgent = navigator.userAgent.toLowerCase();
       const referrer = document.referrer.toLowerCase();
@@ -84,11 +77,8 @@
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const languages = navigator.languages.join(',');
 
-      // Создаем уникальный "отпечаток" устройства (простая хэш-функция для примера)
-      const deviceFingerprint = btoa(userAgent + screenWidth + screenHeight + timezone + languages); // Base64 для упрощения
-      console.log('----')
-      console.log('deviceFingerprint: ', deviceFingerprint)
-      console.log('deviceFingerprintRaw: ', userAgent + screenWidth + screenHeight + timezone + languages)
+      const deviceFingerprintRaw = userAgent + screenWidth + screenHeight + timezone + languages;
+      const deviceFingerprint = btoa(deviceFingerprintRaw); // Base64 для упрощения
 
       const data = {
         deviceFingerprint: deviceFingerprint,
@@ -99,8 +89,6 @@
         timezone: timezone,
         languages: languages
       };
-
-      console.log('data: ', data)
 
       // // Отправка на API (замените URL на ваш реальный API-эндпоинт)
       // fetch('https://your-api-server.com/save-share-id', {
@@ -117,24 +105,11 @@
       //         .catch(error => {
       //           console.error('API error:', error);
       //         });
-    }
 
-    // Отображение платформы и ссылок
-    window.onload = function() {
-      const platform = detectPlatform();
-      console.log(`1. platform: ${platform}`);
-      const shareId = getQueryParam('share');
-      console.log(`2. shareId: ${shareId}`);
-      // Вывод в консоль источника клика
-      const source = detectSource();
-      console.log(`3. User clicked from: ${source}`);
-
-      // Отправляем данные на API (заготовка)
-      sendDeviceDataToApi(shareId);
-
+      // Обновление HTML с данными
       document.getElementById('platform').textContent = `Platform: ${platform}`;
       document.getElementById('shareId').textContent = `shareId: ${shareId}`;
-      document.getElementById('source').textContent = `source: ${source}`;
+      document.getElementById('source').textContent = `source: ${detectSource()}`;
       document.getElementById('userAgent').textContent = `userAgent: ${userAgent}`;
       document.getElementById('screenWidth').textContent = `screenWidth: ${screenWidth}`;
       document.getElementById('screenHeight').textContent = `screenHeight: ${screenHeight}`;
@@ -143,32 +118,47 @@
       document.getElementById('deviceFingerprint').textContent = `deviceFingerprint: ${deviceFingerprint}`;
       document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw: ${deviceFingerprintRaw}`;
       document.getElementById('data').textContent = `data: ${JSON.stringify(data)}`;
-      
-      document.getElementById('spotit-link').href = `spotit://share/${shareId}`;
-      document.getElementById('spotit-live-link').href = `spotit.live://share/${shareId}`;
-      document.getElementById('intent-link').href = `intent://${shareId}#Intent;scheme=spotit.live;package=com.spotit.live;end`;
+    }
+
+    window.onload = function() {
+      // Показываем лоадер
+      document.getElementById('loader').classList.remove('hidden');
+
+      // Получаем shareId из URL
+      const shareId = getQueryParam('share');
+
+      // Вывод в консоль источника клика
+      const source = detectSource();
+      console.log(`User clicked from: ${source}`);
+
+      // Отправляем данные на API и обновляем HTML
+      sendDeviceDataToApi(shareId);
+
+      // Скрываем лоадер после 3 секунд
+      setTimeout(() => {
+        document.getElementById('loader').classList.add('hidden');
+      }, 3000);
     };
   </script>
 </head>
 <body>
 <h1>Spot.It - Test Links</h1>
-<p id="platform">Platform: Detecting...</p>
-<p id="shareId">shareId: Detecting...</p>
-<p id="source">source: Detecting...</p>
-<p id="userAgent">userAgent: Detecting...</p>
-<p id="screenWidth">screenWidth: Detecting...</p>
-<p id="screenHeight">screenHeight: Detecting...</p>
-<p id="timezone">timezone: Detecting...</p>
-<p id="languages">languages: Detecting...</p>
-<p id="deviceFingerprint">deviceFingerprint: Detecting...</p>
-<p id="deviceFingerprintRaw">deviceFingerprintRaw: Detecting...</p>
-<p id="data">data: Detecting...</p>
-<div class="links">
-  <a id="spotit-link" href="#">spotit://share/stage-9yeenHT</a>
-  <a id="spotit-live-link" href="#">spotit.live://share/stage-9yeenHT</a>
-  <a id="intent-link" href="#">intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end</a>
-  <a href="https://play.google.com/store/apps/details?id=com.spotit.live">Google Play Store</a>
-  <a href="https://apps.apple.com/gb/app/spotit-live/id6740921502">App Store</a>
-</div>
+<div id="loader" class="loader hidden"></div>
+<div class="data-item" id="platform">Platform: Detecting...</div>
+<div class="data-item" id="shareId">shareId: Detecting...</div>
+<div class="data-item" id="source">source: Detecting...</div>
+<div class="data-item" id="userAgent">userAgent: Detecting...</div>
+<div class="data-item" id="screenWidth">screenWidth: Detecting...</div>
+<div class="data-item" id="screenHeight">screenHeight: Detecting...</div>
+<div class="data-item" id="timezone">timezone: Detecting...</div>
+<div class="data-item" id="languages">languages: Detecting...</div>
+<div class="data-item" id="deviceFingerprint">deviceFingerprint: Detecting...</div>
+<div class="data-item" id="deviceFingerprintRaw">deviceFingerprintRaw: Detecting...</div>
+<div class="data-item" id="data">data: Detecting...</div>
+<a href="spotit://share/<shareId>">spotit://share/stage-9yeenHT</a>
+<a href="spotit.live://share/<shareId>">spotit.live://share/stage-9yeenHT</a>
+<a href="intent://<shareId>#Intent;scheme=spotit.live;package=com.spotit.live;end">intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end</a>
+<a href="https://play.google.com/store/apps/details?id=com.spotit.live">Google Play Store</a>
+<a href="https://apps.apple.com/gb/app/spotit-live/id6740921502">App Store</a>
 </body>
 </html>
