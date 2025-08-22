@@ -32,37 +32,60 @@
   </style>
   <!-- Подключение FingerprintJS через CDN -->
   <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ua-parser-js/1.0.2/ua-parser.min.js"></script>
   <script>
-    console.log('****************')
-    console.log('001. navigator: ', navigator)
-    console.log('001.1 navigator.gpu: ', navigator.gpu)
-    console.log('001.2 navigator.hardwareConcurrency: ', navigator.hardwareConcurrency)
-    console.log('001.3 navigator.languages: ', navigator.languages)
-    console.log('001.4 navigator.platform: ', navigator.platform)
-    console.log('001.5 navigator.product: ', navigator.product)
-    console.log('001.6 navigator.productSub: ', navigator.productSub)
-    console.log('001.7 navigator.userAgent: ', navigator.userAgent)
-    console.log('001.8 navigator.userAgentData: ', navigator.userAgentData)
+    // console.log('****************')
+    // console.log('001. navigator: ', navigator)
+    // console.log('001.1 navigator.gpu: ', navigator.gpu)
+    // console.log('001.2 navigator.hardwareConcurrency: ', navigator.hardwareConcurrency)
+    // console.log('001.3 navigator.languages: ', navigator.languages)
+    // console.log('001.4 navigator.platform: ', navigator.platform)
+    // console.log('001.5 navigator.product: ', navigator.product)
+    // console.log('001.6 navigator.productSub: ', navigator.productSub)
+    // console.log('001.7 navigator.userAgent: ', navigator.userAgent)
+    // console.log('001.8 navigator.userAgentData: ', navigator.userAgentData)
+    //
+    // console.log('002. window: ', window)
+    // console.log('002.1 window.devicePixelRatio: ', window.devicePixelRatio)
+    // console.log('002.2 window.getScreenDetails(): ', window.getScreenDetails())
+    // console.log('002.3 window.queryLocalFonts(): ', window.queryLocalFonts())
+    // console.log('002.4 window.screen: ', window.screen)
+    // console.log('002.5 window.geolocation(): ', window.geolocation())
+    // console.log('002.6 window.geolocationCoodinates(): ', window.geolocationCoodinates())
+    // console.log('002.7 window.geolocationPosition(): ', window.geolocationPosition())
+    // console.log('002.8 window.HIDDevice(): ', window.HIDDevice())
+    // console.log('002.9 window.Location(): ', window.Location())
+    // console.log('002.10 window.Proxy(): ', window.Proxy())
+    // console.log('002.11 window.Screen(): ', window.Screen())
+    // console.log('002.12 window.ScreenDetails(): ', window.ScreenDetails())
+    // console.log('002.13 window.Serial(): ', window.Serial())
+    //
+    //
+    // console.log('003. document: ', document)
+    // console.log('003.1 document.referrer: ', document.referrer)
+    // console.log('****************')
 
-    console.log('002. window: ', window)
-    console.log('002.1 window.devicePixelRatio: ', window.devicePixelRatio)
-    console.log('002.2 window.getScreenDetails(): ', window.getScreenDetails())
-    console.log('002.3 window.queryLocalFonts(): ', window.queryLocalFonts())
-    console.log('002.4 window.screen: ', window.screen)
-    console.log('002.5 window.geolocation(): ', window.geolocation())
-    console.log('002.6 window.geolocationCoodinates(): ', window.geolocationCoodinates())
-    console.log('002.7 window.geolocationPosition(): ', window.geolocationPosition())
-    console.log('002.8 window.HIDDevice(): ', window.HIDDevice())
-    console.log('002.9 window.Location(): ', window.Location())
-    console.log('002.10 window.Proxy(): ', window.Proxy())
-    console.log('002.11 window.Screen(): ', window.Screen())
-    console.log('002.12 window.ScreenDetails(): ', window.ScreenDetails())
-    console.log('002.13 window.Serial(): ', window.Serial())
+    async function getFingerprint() {
+      const parser = new UAParser();
+      const uaResult = parser.getResult();
 
+      // Собираем параметры fingerprint
+      const fingerprint = {
+        os: uaResult.os.name, // e.g., 'iOS', 'Android'
+        osVersion: uaResult.os.version, // e.g., '14.2'
+        model: uaResult.device.model || 'unknown', // e.g., 'iPhone', 'Pixel'
+        screenWidth: window.screen.width, // Ширина экрана
+        screenHeight: window.screen.height, // Высота экрана
+        pixelRatio: window.devicePixelRatio || 1, // Плотность пикселей
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // e.g., 'Europe/Moscow'
+        timestamp: new Date().toISOString(), // Время клика для временного окна
+      };
+      
+      console.log('777. fingerprint: ', fingerprint)
+      return fingerprint;
+    }
 
-    console.log('003. document: ', document)
-    console.log('003.1 document.referrer: ', document.referrer)
-    console.log('****************')
+    getFingerprint()
 
     // Функция для получения параметра из URL
     function getQueryParam(param) {
