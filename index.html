@@ -214,6 +214,17 @@
       };
 
 
+      const _fingerprint = await getFingerprint()
+      console.log('_fingerprint: ', _fingerprint)
+      let _fingerprintString = ''
+
+      try {
+        _fingerprintString = JSON.stringify(_fingerprint)
+      } catch (e) {
+        console.log('json.stringify Error: ', e)
+      }
+      document.getElementById('deviceFingerprintRaw').textContent = `444. deviceFingerprintRaw (Custom): ${_fingerprintString}`;
+      
       // Обновление HTML с кастомными данными
       document.getElementById('platform').textContent = `Platform: ${platform}`;
       document.getElementById('shareId').textContent = `shareId: ${shareId}`;
@@ -227,16 +238,7 @@
       // document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw (Custom): ${deviceFingerprintRaw.substring(0, 50)}...`;
       document.getElementById('data').textContent = `data (Custom): ${JSON.stringify(data, null, 2)}`;
 
-      const _fingerprint = await getFingerprint()
-      console.log('_fingerprint: ', _fingerprint)
-      let _fingerprintString = ''
       
-      try {
-        _fingerprintString = JSON.stringify(_fingerprint)
-      } catch (e) {
-        console.log('json.stringify Error: ', e)
-      }
-      document.getElementById('deviceFingerprintRaw').textContent = `444. deviceFingerprintRaw (Custom): ${_fingerprintString}`;
 
       // // Отправка на API (замените URL)
       // fetch('https://your-api-server.com/save-share-id', {
