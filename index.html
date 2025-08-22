@@ -33,6 +33,12 @@
   <!-- Подключение FingerprintJS через CDN -->
   <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
   <script>
+    console.log('****************')
+    console.log('001. navigator: ', navigator)
+    console.log('002. window: ', window)
+    console.log('003. document: ', document)
+    console.log('****************')
+
     // Функция для получения параметра из URL
     function getQueryParam(param) {
       const urlParams = new URLSearchParams(window.location.search);
