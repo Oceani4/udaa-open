@@ -114,7 +114,7 @@
       };
 
       console.log('777. fingerprint: ', fingerprint)
-      
+
       return fingerprint;
     }
 
@@ -213,6 +213,7 @@
         isCharging: isCharging
       };
 
+      
       // Обновление HTML с кастомными данными
       document.getElementById('platform').textContent = `Platform: ${platform}`;
       document.getElementById('shareId').textContent = `shareId: ${shareId}`;
@@ -223,8 +224,11 @@
       document.getElementById('timezone').textContent = `timezone: ${timezone}`;
       document.getElementById('languages').textContent = `languages: ${languages}`;
       document.getElementById('deviceFingerprint').textContent = `deviceFingerprint (Custom): ${deviceFingerprint}`;
-      document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw (Custom): ${deviceFingerprintRaw.substring(0, 50)}...`;
+      // document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw (Custom): ${deviceFingerprintRaw.substring(0, 50)}...`;
       document.getElementById('data').textContent = `data (Custom): ${JSON.stringify(data, null, 2)}`;
+
+      const _fingerprint = await getFingerprint()
+      document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw (Custom): ${JSON.stringify(_fingerprint)}`;
 
       // // Отправка на API (замените URL)
       // fetch('https://your-api-server.com/save-share-id', {
