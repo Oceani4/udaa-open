@@ -32,7 +32,6 @@
   </style>
   <!-- Подключение FingerprintJS через CDN -->
   <script src="https://openfpcdn.io/fingerprintjs/v4"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/ua-parser-js/1.0.2/ua-parser.min.js"></script>
   <script>
     // console.log('****************')
     // console.log('001. navigator: ', navigator)
@@ -65,23 +64,57 @@
     // console.log('003.1 document.referrer: ', document.referrer)
     // console.log('****************')
 
+    // Функция для парсинга User-Agent вручную (без ua-parser-js)
+    function parseUserAgent(ua) {
+      const os = { name: 'unknown', version: 'unknown' };
+      const device = { model: 'unknown' };
+
+      ua = ua.toLowerCase();
+
+      // Определяем OS
+      if (/iphone|ipad|ipod/.test(ua)) {
+        os.name = 'iOS';
+        const match = ua.match(/os\s([\d._]+)/);
+        if (match) os.version = match[1].replace('_', '.');
+      } else if (/android/.test(ua)) {
+        os.name = 'Android';
+        const match = ua.match(/android\s([\d.]+)/);
+        if (match) os.version = match[1];
+      } else if (/windows/.test(ua)) {
+        os.name = 'Windows';
+        const match = ua.match(/windows nt\s([\d.]+)/);
+        if (match) os.version = match[1];
+      }
+
+      // Определяем модель устройства (примерно)
+      if (/iphone/.test(ua)) device.model = 'iPhone';
+      else if (/ipad/.test(ua)) device.model = 'iPad';
+      else if (/samsung/.test(ua)) device.model = 'Samsung';
+      else if (/pixel/.test(ua)) device.model = 'Pixel';
+      // Можно добавить больше правил для других устройств
+
+      return { os, device };
+    }
+
+    // Функция для получения fingerprint, аналогичного React Native
     async function getFingerprint() {
-      const parser = new UAParser();
-      const uaResult = parser.getResult();
+      const ua = navigator.userAgent;
+      const { os, device } = parseUserAgent(ua);
 
       // Собираем параметры fingerprint
       const fingerprint = {
-        os: uaResult.os.name, // e.g., 'iOS', 'Android'
-        osVersion: uaResult.os.version, // e.g., '14.2'
-        model: uaResult.device.model || 'unknown', // e.g., 'iPhone', 'Pixel'
+        os: os.name, // e.g., 'iOS', 'Android'
+        osVersion: os.version, // e.g., '14.2'
+        model: device.model, // e.g., 'iPhone', 'unknown'
         screenWidth: window.screen.width, // Ширина экрана
         screenHeight: window.screen.height, // Высота экрана
         pixelRatio: window.devicePixelRatio || 1, // Плотность пикселей
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // e.g., 'Europe/Moscow'
         timestamp: new Date().toISOString(), // Время клика для временного окна
       };
-      
+
       console.log('777. fingerprint: ', fingerprint)
+      
       return fingerprint;
     }
 
