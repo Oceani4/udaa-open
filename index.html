@@ -224,7 +224,7 @@
         console.log('json.stringify Error: ', e)
       }
       document.getElementById('deviceFingerprintRaw').textContent = `444. deviceFingerprintRaw (Custom): ${_fingerprintString}`;
-      
+
       // Обновление HTML с кастомными данными
       document.getElementById('platform').textContent = `Platform: ${platform}`;
       document.getElementById('shareId').textContent = `shareId: ${shareId}`;
@@ -238,7 +238,7 @@
       // document.getElementById('deviceFingerprintRaw').textContent = `deviceFingerprintRaw (Custom): ${deviceFingerprintRaw.substring(0, 50)}...`;
       document.getElementById('data').textContent = `data (Custom): ${JSON.stringify(data, null, 2)}`;
 
-      
+
 
       // // Отправка на API (замените URL)
       // fetch('https://your-api-server.com/save-share-id', {
@@ -266,39 +266,6 @@
       // Кастомный fingerprint
       sendDeviceDataToApi(shareId);
 
-      // Динамический импорт FingerprintJS
-      // import('https://openfpcdn.io/fingerprintjs/v4')
-      //         .then(FingerprintJS => FingerprintJS.load())
-      import('https://fpjscdn.net/v3/tieQhqJX6feQrgOXYhV3')
-              .then(FingerprintJS => FingerprintJS.load({
-                region: "eu"
-              }))
-              .then(fp => fp.get())
-              .then(result => {
-                const fingerprintJSId = result.visitorId;
-                console.log('FingerprintJS result:', result);
-                console.log('FingerprintJS visitorId:', fingerprintJSId);
-
-                // Обновление HTML с FingerprintJS данными
-                document.getElementById('fingerprintJSId').textContent = `deviceFingerprint (FingerprintJS): ${fingerprintJSId}`;
-
-                // Отправка FingerprintJS на API
-                const fpData = {
-                  deviceFingerprint: fingerprintJSId,
-                  shareId: shareId,
-                  platform: detectPlatform()
-                };
-                // fetch('https://your-api-server.com/save-share-id', {
-                //   method: 'POST',
-                //   headers: {'Content-Type': 'application/json'},
-                //   body: JSON.stringify(fpData)
-                // })
-                //         .then(response => response.json())
-                //         .then(result => console.log('API response (FingerprintJS):', result))
-                //         .catch(error => console.error('API error (FingerprintJS):', error));
-              })
-              .catch(error => console.error('FingerprintJS load error:', error));
-
       // Динамическое обновление ссылок
       const links = document.getElementsByTagName('a');
       for (let link of links) {
@@ -325,14 +292,14 @@
 <div class="data-item" id="screenHeight">screenHeight: Detecting...</div>
 <div class="data-item" id="timezone">timezone: Detecting...</div>
 <div class="data-item" id="languages">languages: Detecting...</div>
-<div class="data-item" id="deviceFingerprint">deviceFingerprint (Custom): Detecting...</div>
+<!--<div class="data-item" id="deviceFingerprint">deviceFingerprint (Custom): Detecting...</div>-->
 <div class="data-item" id="deviceFingerprintRaw">deviceFingerprintRaw (Custom): Detecting...</div>
 <div class="data-item" id="data">data (Custom): Detecting...</div>
-<div class="data-item" id="fingerprintJSId">deviceFingerprint (FingerprintJS): Detecting...</div>
+<!--<div class="data-item" id="fingerprintJSId">deviceFingerprint (FingerprintJS): Detecting...</div>-->
 <a href="spotit://share/stage-9yeenHT">spotit://share/stage-9yeenHT</a>
 <a href="spotit.live://share/stage-9yeenHT">spotit.live://share/stage-9yeenHT</a>
 <a href="intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end">intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end</a>
-<a href="https://play.google.com/store/apps/details?id=com.spotit.live">Google Play Store</a>
+<a href=`https://play.google.com/store/apps/details?id=com.spotit.live&referrer=utm_source%3Dspotit://share/stage-9yeenHT`>Google Play Store</a>
 <a href="https://apps.apple.com/gb/app/spotit-live/id6740921502">App Store</a>
 </body>
 </html>
