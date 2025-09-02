@@ -107,7 +107,26 @@
       return fingerprint;
     }
 
-    getFingerprint()
+    async function sendFingerPrint(data) {
+      fetch('https://stage.api.spotit.live/v1/putShare', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+              .then(response => response.json())
+              .then(result => {
+                console.log('API response:', result);
+              })
+              .catch(error => {
+                console.error('API error:', error);
+              });
+    }
+    }
+
+    const fingerPrint = getFingerprint()
+    sendFingerPrint(fingerPrint)
 
     // Функция для получения параметра из URL
     function getQueryParam(param) {
@@ -291,7 +310,8 @@
 <a href="spotit://share/stage-9yeenHT">spotit://share/stage-9yeenHT</a>
 <a href="spotit.live://share/stage-9yeenHT">spotit.live://share/stage-9yeenHT</a>
 <a href="intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end">intent://stage-9yeenHT#Intent;scheme=spotit.live;package=com.spotit.live;end</a>
-<a href=`https://play.google.com/store/apps/details?id=com.spotit.live&referrer=utm_source%3Dspotit://share/stage-9yeenHT`>Google Play Store</a>
+<a href=`https://play.google.com/store/apps/details?id=com.spotit.live&referrer=utm_source%3Dspotit://share/stage-9yeenHT`>Google Play Store 1</a>
+<a href=`https://play.google.com/store/apps/details?id=com.spotit.live&referrer=spotit://share/stage-9yeenHT`>Google Play Store 2</a>
 <a href="https://apps.apple.com/gb/app/spotit-live/id6740921502">App Store</a>
 </body>
 </html>
