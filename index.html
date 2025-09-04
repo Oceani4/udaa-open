@@ -3,28 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Мета-теги для превью в мессенджерах -->
-  <meta property="og:title" content="Spot.It - Shared Content">
-  <meta property="og:description" content="Point. Snap. Done. Explore with Spot.It!">
-  <meta property="og:image" content="https://spotit.live/images/preview-image.jpg">
-  <meta property="og:url" content="https://spotit.live/share/<%- shareId %>">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Spot.It - Shared Content">
-  <meta name="twitter:description" content="Point. Snap. Done. Explore with Spot.It!">
-  <meta name="twitter:image" content="https://spotit.live/images/preview-image.jpg">
-  <!-- Мета-тег для попытки редиректа -->
-  <meta http-equiv="refresh" content="0; url=spotit://share/<%- shareId %>">
-  <title>Spot.It - Point. Snap. Done.</title>
+  <title>Spot.It - Test Links</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
-      margin-top: 50px;
+      margin-top: 20px;
     }
     .loader {
-      border: 8px solid #f3f3f3; /* Light grey */
-      border-top: 8px solid #3498db; /* Blue */
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #3498db;
       border-radius: 50%;
       width: 60px;
       height: 60px;
@@ -38,129 +26,143 @@
     .hidden {
       display: none;
     }
+    .data-item {
+      margin: 5px 0;
+    }
   </style>
   <script>
-    // Функция для получения параметра из URL
-    function getQueryParam(param) {
-      // const urlParams = new URLSearchParams(window.location.search);
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
-    }
+    // Функция для парсинга User-Agent вручную (без ua-parser-js)
+    function parseUserAgent(ua) {
+      const os = { name: 'unknown', version: 'unknown' };
+      const device = { model: 'unknown' };
 
-    // Определение платформы (Android, iOS или не определено)
-    function detectPlatform() {
-      const userAgent = navigator.userAgent;
-      if (/android/i.test(userAgent)) {
-        return "Android";
-      } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-        return "iOS";
-      } else {
-        return "Not detected";
+      ua = ua.toLowerCase();
+
+      // Определяем OS
+      if (/iphone|ipad|ipod/.test(ua)) {
+        os.name = 'iOS';
+        const match = ua.match(/os\s([\d._]+)/);
+        if (match) os.version = match[1].replace('_', '.');
+      } else if (/android/.test(ua)) {
+        os.name = 'Android';
+        const match = ua.match(/android\s([\d.]+)/);
+        if (match) os.version = match[1];
+      } else if (/windows/.test(ua)) {
+        os.name = 'Windows';
+        const match = ua.match(/windows nt\s([\d.]+)/);
+        if (match) os.version = match[1];
       }
+
+      // Определяем модель устройства (примерно)
+      if (/iphone/.test(ua)) device.model = 'iPhone';
+      else if (/ipad/.test(ua)) device.model = 'iPad';
+      else if (/samsung/.test(ua)) device.model = 'Samsung';
+      else if (/pixel/.test(ua)) device.model = 'Pixel';
+      // Можно добавить больше правил для других устройств
+
+      return { os, device };
     }
 
-    // Определение источника (браузер/приложение)
-    function detectSource() {
-      const userAgent = navigator.userAgent.toLowerCase();
-      const referrer = document.referrer.toLowerCase();
-      if (referrer.includes('instagram') || userAgent.includes('instagram')) {
-        return 'Instagram';
-      } else if (referrer.includes('telegram') || userAgent.includes('telegram')) {
-        return 'Telegram';
-      } else if (referrer.includes('whatsapp') || userAgent.includes('whatsapp')) {
-        return 'WhatsApp';
-      } else if (userAgent.includes('chrome')) {
-        return 'Chrome';
-      } else if (userAgent.includes('safari')) {
-        return 'Safari';
-      } else {
-        return 'Unknown';
-      }
-    }
+    // Функция для получения fingerprint, аналогичного React Native
+    async function getFingerprint() {
+      const ua = navigator.userAgent;
+      const { os, device } = parseUserAgent(ua);
 
-    // Заготовка для отправки уникальных данных устройства и shareId на сервер
-    function sendDeviceDataToApi(shareId) {
-      const platform = detectPlatform();
-      const userAgent = navigator.userAgent;
-      const screenWidth = window.screen.width;
-      const screenHeight = window.screen.height;
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const languages = navigator.languages.join(',');
-
-      // Создаем уникальный "отпечаток" устройства (простая хэш-функция для примера)
-      const deviceFingerprint = btoa(userAgent + screenWidth + screenHeight + timezone + languages); // Base64 для упрощения
-
-      const data = {
-        deviceFingerprint: deviceFingerprint,
-        shareId: shareId,
-        platform: platform,
-        userAgent: userAgent,
-        screenResolution: `${screenWidth}x${screenHeight}`,
-        timezone: timezone,
-        languages: languages
+      // Собираем параметры fingerprint
+      const fingerprint = {
+        os: os.name, // e.g., 'iOS', 'Android'
+        osVersion: os.version, // e.g., '14.2'
+        model: device.model, // e.g., 'iPhone', 'unknown'
+        screenWidth: window.screen.width, // Ширина экрана
+        screenHeight: window.screen.height, // Высота экрана
+        pixelRatio: window.devicePixelRatio || 1, // Плотность пикселей
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // e.g., 'Europe/Moscow'
+        timestamp: new Date().toISOString(), // Время клика для временного окна
       };
 
-      // Отправка на API (замените URL на ваш реальный API-эндпоинт)
-      fetch('https://your-api-server.com/save-share-id', {
+      console.log('777. fingerprint: ', fingerprint)
+
+      return fingerprint;
+    }
+
+    async function sendFingerPrint(data) {
+      fetch('https://stage.api.spotit.live/v1/putShare', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       })
-              .then(response => response.json())
-              .then(result => {
-                console.log('API response:', result);
-                document.getElementById('deviceDataResponse').textContent = `deviceDataResponse: ${JSON.stringify(result, null, 2)}`;
-              })
-              .catch(error => {
-                console.error('API error:', error);
-              });
+        .then(response => response.json())
+        .then(result => {
+          console.log('API response:', result);
+          document.getElementById('sendFingerprintResp').textContent = `send fingerPrint response: ${result}`;
+        })
+        .catch(error => {
+          console.error('API error:', error);
+        });
     }
 
-    window.onload = function() {
+    const fingerPrint = getFingerprint()
+    sendFingerPrint(fingerPrint)
+
+    // Функция для получения параметра из URL
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param) || "stage-9yeenHT";
+    }
+
+    async function processFingerprint(shareId) {
+      const _fingerprint = await getFingerprint()
+      console.log('_fingerprint: ', _fingerprint)
+      let _fingerprintString = ''
+
+      try {
+        _fingerprintString = JSON.stringify(_fingerprint)
+      } catch (e) {
+        console.log('json.stringify Error: ', e)
+      }
+      document.getElementById('deviceFingerprint').textContent = `deviceFingerprint: ${_fingerprintString}`;
+
+      // Обновление HTML с кастомными данными
+      document.getElementById('os').textContent = `OS: ${_fingerprint.os}`;
+      document.getElementById('osVersion').textContent = `shareId: ${_fingerprint.osVersion}`;
+      document.getElementById('model').textContent = `source: ${_fingerprint.model}`;
+      document.getElementById('screenWidth').textContent = `userAgent: ${_fingerprint.screenWidth}`;
+      document.getElementById('screenHeight').textContent = `screenWidth: ${_fingerprint.screenHeight}`;
+      document.getElementById('pixelRatio').textContent = `screenHeight: ${_fingerprint.pixelRatio}`;
+      document.getElementById('timezone').textContent = `timezone: ${_fingerprint.timezone}`;
+    }
+
+    // FingerprintJS deviceFingerprint
+    window.onload = async function() {
       // Показываем лоадер
       document.getElementById('loader').classList.remove('hidden');
-      // // const shareId = path.split('/share/')[1];
-      // const shareId = search.split('?share=')[1];
+
       // Получаем shareId из URL
-      const shareId = getQueryParam('share') || ''; // Значение по умолчанию, если не указано
-      console.log('1. shareId: ', shareId)
+      const shareId = getQueryParam('share');
+      console.log('888.. shareId: ', shareId)
 
-      const isAndroid = /Android/i.test(navigator.userAgent)
+      processFingerprint(shareId);
 
-      // Вывод в консоль источника клика
-      const source = detectSource();
-      console.log(`2. User clicked from: ${source}`);
-
-      // Попытка редиректа на кастомную схему
-      if (shareId) {
-        // Отправляем данные на API (заготовка)
-        sendDeviceDataToApi(shareId);
-
-        const appUrl = `spotit://share/${shareId}`;
-        window.location.href = appUrl;
-
-      }
-
+      // Скрываем лоадер после 3 секунд
       setTimeout(() => {
         document.getElementById('loader').classList.add('hidden');
-        window.location.href = isAndroid
-                ? `https://play.google.com/store/apps/details?id=com.spotit.live&referrer=utm_source%3Dspotit://share/${shareId}`
-                : 'https://apps.apple.com/gb/app/spotit-live/id6740921502'
-      }, 5000);
-
-      // Попытка открытия приложения (пример редиректа, закомментировано как в предыдущих версиях)
-      const platform = detectPlatform();
-
-
+      }, 3000);
     };
   </script>
 </head>
 <body>
-<h1>Spot.It - Point. Snap. Done.</h1>
-<p>Opening Spot.It app...</p>
-<div id="loader" class="loader hidden"></div> <!-- Лоадер скрыт по умолчанию -->
-<div class="data-item" id="deviceDataResponse">deviceDataResponse: Detecting...</div>
+  <h1>Spot.It - Test Links</h1>
+  <div id="loader" class="loader hidden"></div>
+  <div class="data-item" id="os">platform: Detecting...</div>
+  <div class="data-item" id="osVersion">osVersion: Detecting...</div>
+  <div class="data-item" id="model">model: Detecting...</div>
+  <div class="data-item" id="screenWidth">screenWidth: Detecting...</div>
+  <div class="data-item" id="screenHeight">screenHeight: Detecting...</div>
+  <div class="data-item" id="pixelRatio">pixelRatio: Detecting...</div>
+  <div class="data-item" id="timezone">timezone: Detecting...</div>
+  <div class="data-item" id="deviceFingerprint">deviceFingerprint: Detecting...</div>
+  <div class="data-item" id="sendFingerprintResp">send fingerPrint response: Waiting...</div>
 </body>
 </html>
