@@ -86,7 +86,8 @@
     }
 
     async function sendFingerPrint(data) {
-      fetch("https://cors-anywhere.herokuapp.com/https://stage.api.spotit.live/v1/putShare", {
+      fetch("http://localhost:3000/proxy/putShare", {
+      // fetch("https://cors-anywhere.herokuapp.com/https://stage.api.spotit.live/v1/putShare", {
       // fetch('https://stage.api.spotit.live/v1/putShare', {
         method: 'POST',
         headers: {
